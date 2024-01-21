@@ -112,10 +112,11 @@ class App(QWidget):
         publisher = self.publisher_manual.text()
         documenttype = self.documenttype_manual.text()
         ref = self.ref_manual.text()
+        fileName, _ = QFileDialog.getOpenFileName(self,"QFileDialog.getOpenFileName()", "","All Files (*);;PDF Files (*.pdf)")
         if self.library_manual.currentText() == "Papers":
-            papis_add_command = "papis -l papers add --set title " + title + " --set author " + authors + " --set year " + year + " --set url " + url + " --set publisher " + publisher + " --set type " + documenttype + " --set ref " + ref
+            papis_add_command = "papis -l papers add " +fileName + " --set title " + title + " --set author " + authors + " --set year " + year + " --set url " + url + " --set publisher " + publisher + " --set type " + documenttype + " --set ref " + ref
         elif self.library_manual.currentText() == "Thesis":
-            papis_add_command = "papis -l thesis add --set title " + title + " --set author " + authors + " --set year " + year + " --set url " + url + " --set publisher " + publisher + " --set type " + documenttype + " --set ref " + ref
+            papis_add_command = "papis -l thesis add " + fileName +" --set title " + title + " --set author " + authors + " --set year " + year + " --set url " + url + " --set publisher " + publisher + " --set type " + documenttype + " --set ref " + ref
         subprocess.call(papis_add_command, shell=True)
 
 
