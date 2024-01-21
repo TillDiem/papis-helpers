@@ -8,7 +8,7 @@ class App(QWidget):
 
     def __init__(self):
         super().__init__()
-        self.title = 'Papis Adder by Tigi 🐾'
+        self.title = 'Papis Adder by 🐾'
         self.left = 10
         self.top = 10
         self.width = 640
