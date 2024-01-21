@@ -40,16 +40,19 @@ class App(QWidget):
         self.gridLayout = QGridLayout()
         self.url = QLineEdit()
         self.url.setPlaceholderText("Enter URL")
+        self.tags = QLineEdit()
+        self.tags.setPlaceholderText("Enter tags")
         self.add = QPushButton('Add', self)
         self.add.clicked.connect(self.on_click)
         self.gridLayout.addWidget(self.url, 0, 0)
-        self.gridLayout.addWidget(self.add, 1, 0)
+        self.gridLayout.addWidget(self.tags, 1, 0)
+        self.gridLayout.addWidget(self.add, 2, 0)
         self.warning = QLabel()
-        self.gridLayout.addWidget(self.warning, 2, 0)
+        self.gridLayout.addWidget(self.warning, 3, 0)
         self.library = QComboBox()
         self.library.addItem("Papers")
         self.library.addItem("Thesis")
-        self.gridLayout.addWidget(self.library, 3, 0)
+        self.gridLayout.addWidget(self.library, 4, 0)
 
         # New layout for Manual tab
         self.manualGridLayout = QGridLayout()
@@ -67,6 +70,8 @@ class App(QWidget):
         self.documenttype_manual.setPlaceholderText("Document Type (phdthesis, article, etc.)")
         self.ref_manual = QLineEdit()
         self.ref_manual.setPlaceholderText("Reference")
+        self.tags_manual = QLineEdit()
+        self.tags_manual.setPlaceholderText("Tags")
         self.add_manual = QPushButton('Add', self)
         self.add_manual.clicked.connect(self.on_click_manual)
         self.library_manual = QComboBox()
@@ -79,8 +84,9 @@ class App(QWidget):
         self.manualGridLayout.addWidget(self.publisher_manual, 4, 0)
         self.manualGridLayout.addWidget(self.documenttype_manual, 5, 0)
         self.manualGridLayout.addWidget(self.ref_manual, 6, 0)
-        self.manualGridLayout.addWidget(self.add_manual, 7, 0)
-        self.manualGridLayout.addWidget(self.library_manual, 8, 0)
+        self.manualGridLayout.addWidget(self.tags_manual, 7, 0)
+        self.manualGridLayout.addWidget(self.add_manual, 8, 0)
+        self.manualGridLayout.addWidget(self.library_manual, 9, 0)
 
     @pyqtSlot()
     def on_click(self):
@@ -100,6 +106,8 @@ class App(QWidget):
                 papis_add_command = "papis -l papers add --from doi " + url + " " + fileName
             elif self.library.currentText() == "Thesis":
                 papis_add_command = "papis -l thesis add --from doi " + url + " " + fileName
+        if self.tags.text() != "":
+            papis_add_command += " --set tags " + self.tags.text()
         else:
             self.warning.setText("URL not supported, please use the terminal version as in:\n https://papis.readthedocs.io/en/stable/commands.html")
         subprocess.call(papis_add_command, shell=True)
@@ -113,10 +121,28 @@ class App(QWidget):
         documenttype = self.documenttype_manual.text()
         ref = self.ref_manual.text()
         fileName, _ = QFileDialog.getOpenFileName(self,"QFileDialog.getOpenFileName()", "","All Files (*);;PDF Files (*.pdf)")
+        papis_add_command = ""
         if self.library_manual.currentText() == "Papers":
-            papis_add_command = "papis -l papers add " +fileName + " --set title " + title + " --set author " + authors + " --set year " + year + " --set url " + url + " --set publisher " + publisher + " --set type " + documenttype + " --set ref " + ref
+            papis_add_command = "papis -l papers add " +fileName
         elif self.library_manual.currentText() == "Thesis":
-            papis_add_command = "papis -l thesis add " + fileName +" --set title " + title + " --set author " + authors + " --set year " + year + " --set url " + url + " --set publisher " + publisher + " --set type " + documenttype + " --set ref " + ref
+            papis_add_command = "papis -l thesis add " + fileName
+        if self.title_manual.text() != "":
+            papis_add_command += " --set title '" + self.title_manual.text() + "'"
+        if self.authors_manual.text() != "":
+            papis_add_command += " --set author " + self.authors_manual.text()
+        if self.year_manual.text() != "":
+            papis_add_command += " --set year " + self.year_manual.text()
+        if self.url_manual.text() != "":
+            papis_add_command += " --set url '" + self.url_manual.text() + "'"
+        if self.publisher_manual.text() != "":
+            papis_add_command += " --set publisher " + self.publisher_manual.text()
+        if self.documenttype_manual.text() != "":
+            papis_add_command += " --set type " + self.documenttype_manual.text()
+        if self.ref_manual.text() != "":
+            papis_add_command += " --set ref " + self.ref_manual.text()
+        if self.tags_manual.text() != "":
+            papis_add_command += " --set tags " + self.tags_manual.text()
+        print(papis_add_command)
         subprocess.call(papis_add_command, shell=True)
 
 
