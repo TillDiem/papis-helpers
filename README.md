@@ -4,6 +4,7 @@ Consider it work in progress.
 ## Dependencies
 
 - `python3`
+- `PyQt5`
 
 ## Adding Papers
 
